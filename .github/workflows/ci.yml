@@ -1,10 +1,17 @@
 name: Lint
 
-on: [push]
+on:
+  pull_request:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    env:
+      OIDC_ROLE_ARN: ${{ secrets.OIDC_CI_ROLE_ARN }}
     steps:
       - uses: actions/checkout@v3
 
@@ -28,3 +35,18 @@ jobs:
           reporter: github-pr-review
           filter_mode: nofilter
           fail_on_error: true
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -out workspace.plan
+
+      - name: Post Plan
+        if: ${{ always() && github.ref != 'refs/heads/main' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') }}
+        uses: GetTerminus/terraform-pr-commenter@v2
+        env:
+          EXPAND_SUMMARY_DETAILS: false
+        with:
+          terraform_version: '1.5.0'
+          commenter_type: plan
+          commenter_input: ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+          commenter_exitcode: ${{ steps.plan.outputs.exitcode }}

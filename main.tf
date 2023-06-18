@@ -9,7 +9,8 @@ provider "aws" {
 }
 
 module "base" {
-  region   = var.region
-  app_name = var.app_name
-  source   = "./modules"
+  region     = var.region
+  app_name   = var.app_name
+  repository = var.repository
+  source     = "./modules"
 }
