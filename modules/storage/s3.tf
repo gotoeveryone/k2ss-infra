@@ -2,11 +2,6 @@ resource "aws_s3_bucket" "internal_resource" {
   bucket = "${var.app_name}-internal-resource"
 }
 
-resource "aws_s3_bucket_acl" "internal_resource" {
-  bucket = aws_s3_bucket.internal_resource.bucket
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_versioning" "internal_resource" {
   bucket = aws_s3_bucket.internal_resource.bucket
   versioning_configuration {
