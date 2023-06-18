@@ -60,3 +60,36 @@ data "aws_iam_policy_document" "ci_policy" {
     ]
   }
 }
+
+resource "aws_iam_group" "internal_resource_controller" {
+  name = "${var.app_name}-internal-resource-controller"
+  path = "/"
+}
+
+resource "aws_iam_group_policy_attachment" "internal_resource_controller" {
+  group      = aws_iam_group.internal_resource_controller.name
+  policy_arn = aws_iam_policy.internal_resource_controller_policy.arn
+}
+
+resource "aws_iam_policy" "internal_resource_controller_policy" {
+  name        = "${aws_iam_group.internal_resource_controller.name}-policy"
+  description = "for Internal Resource Controller"
+
+  policy = data.aws_iam_policy_document.internal_resource_controller_policy.json
+}
+
+data "aws_iam_policy_document" "internal_resource_controller_policy" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:PutObjectAcl"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.internal_resource_bucket}/*",
+    ]
+  }
+}
