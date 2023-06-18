@@ -11,7 +11,7 @@ jobs:
       contents: read
       pull-requests: write
     env:
-      OIDC_ROLE_ARN: ${{ secrets.OIDC_CI_ROLE_ARN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
 
@@ -20,6 +20,12 @@ jobs:
         with:
           terraform_version: '1.5.0'
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.OIDC_CI_ROLE_ARN }}
+          aws-region: ap-northeast-1
 
       - name: Terraform Init
         run: terraform init
@@ -30,7 +36,6 @@ jobs:
       - name: Run tfsec with reviewdog output on the PR
         uses: reviewdog/action-tfsec@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           tfsec_version: v1.28.1
           reporter: github-pr-review
           filter_mode: nofilter

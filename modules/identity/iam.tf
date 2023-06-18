@@ -33,6 +33,7 @@ resource "aws_iam_role" "ci_role" {
   description           = "for GitHub Actions OIDC"
   force_detach_policies = false
   managed_policy_arns = [
+    "arn:aws:iam::aws:policy/IAMReadOnlyAccess",
     aws_iam_policy.ci_policy.arn,
   ]
 }
@@ -45,6 +46,7 @@ resource "aws_iam_policy" "ci_policy" {
 }
 
 data "aws_iam_policy_document" "ci_policy" {
+  # S3
   statement {
     # 細かく制御するとキリが無いので、Get/List は全許可する
     # tfsec:ignore:aws-iam-no-policy-wildcards
