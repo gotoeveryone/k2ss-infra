@@ -46,6 +46,8 @@ resource "aws_iam_policy" "ci_policy" {
 
 data "aws_iam_policy_document" "ci_policy" {
   statement {
+    # 細かく制御するとキリが無いので、Get/List は全許可する
+    # tfsec:ignore:aws-iam-no-policy-wildcards
     actions = [
       "s3:Get*",
       "s3:List*"
