@@ -1,0 +1,65 @@
+nginx_config_http_template_enable: true
+nginx_config_http_template:
+  - deployment_location: /etc/nginx/conf.d/redmine.conf
+    config:
+      upstreams:
+        - name: redmine
+          servers:
+            - address: unix:/opt/redmine/tmp/redmine.sock
+              fail_timeout: 0
+      servers:
+        - core:
+            listen:
+              - port: 80
+            server_name: '{{ redmine_server_name }}'
+          locations:
+            - location: /
+              core:
+                root: '/usr/share/nginx/html'
+                index: index.html
+              autoindex:
+                enable: false
+              rewrite:
+                return:
+                  code: 301
+                  url: 'https://{{ redmine_server_name }}$request_uri'
+        - core:
+            listen:
+              - port: 443
+                ssl: true
+            http2:
+              enable: true
+            server_name: '{{ redmine_server_name }}'
+          locations:
+            - location: /
+              proxy:
+                pass: 'http://redmine'
+                set_header:
+                  - field: Host
+                    value: $host
+                  - field: X-Real-IP
+                    value: $remote_addr
+                  - field: X-Forwarded-For
+                    value: $proxy_add_x_forwarded_for
+                  - field: X-Forwarded-Proto
+                    value: $scheme
+          ssl:
+            certificate: '/etc/letsencrypt/live/{{ redmine_server_name }}/fullchain.pem'
+            certificate_key: '/etc/letsencrypt/live/{{ redmine_server_name }}/privkey.pem'
+            ciphers:
+              - HIGH
+              - "!aNULL"
+              - "!MD5"
+            prefer_server_ciphers: true
+            session_cache:
+              shared:
+                name: SSL
+                size: 1m
+            session_timeout: 5m
+          log:
+            access:
+              - path: '/var/log/nginx/{{ redmine_server_name }}_access.log'
+                format: main
+          error_log:
+            - file: '/var/log/nginx/{{ redmine_server_name }}_error.log'
+              level: warn

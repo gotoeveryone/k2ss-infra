@@ -1,0 +1,13 @@
+- name: Transfer service file
+  copy:
+    src: '{{ item }}.service'
+    dest: '/etc/systemd/system/{{ item }}.service'
+  with_items:
+    - redmine
+- name: Enable service
+  systemd:
+    name: '{{ item }}'
+    daemon_reload: yes
+    enabled: yes
+  with_items:
+    - redmine

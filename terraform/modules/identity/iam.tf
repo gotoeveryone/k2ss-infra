@@ -61,6 +61,19 @@ data "aws_iam_policy_document" "ci_policy" {
       "arn:aws:s3:::${var.internal_resource_bucket}/*",
     ]
   }
+  // Lightsail
+  statement {
+    effect = "Allow"
+    actions = [
+      "lightsail:GetInstance",
+      "lightsail:GetInstancePortStates",
+      "lightsail:GetKeyPair",
+      "lightsail:GetStaticIp",
+    ]
+    # アクションを限定しているため、リソースについては全許可する
+    # tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_group" "internal_resource_controller" {

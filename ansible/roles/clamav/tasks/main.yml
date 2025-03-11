@@ -1,0 +1,11 @@
+- include_role:
+    name: geerlingguy.clamav
+- name: Create directory
+  file:
+    path: /opt/shell/
+    state: directory
+- name: Transfer shell
+  copy:
+    src: clamscan.sh
+    dest: /opt/shell/clamscan.sh
+    mode: a+x

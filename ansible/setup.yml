@@ -1,0 +1,22 @@
+- hosts: web
+  become: yes
+  roles:
+    - timezone
+    - locale
+    - yq
+    - add_user
+    - systemd
+    - geerlingguy.mysql
+    - geerlingguy.ruby
+    - redmine
+    - nginxinc.nginx
+    - nginxinc.nginx_config
+    - clamav
+    - anxs.tmpreaper
+  vars_files:
+    - vars/user.yml
+    - vars/nginx.yml
+    - vars/ruby.yml
+    - vars/mysql.yml
+    - vars/redmine.yml
+    - vars/tmpreaper.yml

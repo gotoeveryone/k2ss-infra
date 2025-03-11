@@ -1,10 +1,37 @@
-name: Lint
+name: CI
 
 on:
   pull_request:
 
 jobs:
-  lint:
+  ansible:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ansible
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: "3.11"
+          cache: pipenv
+          cache-dependency-path: |
+            ansible/Pipfile.lock
+
+      - name: Setup Pipenv
+        run: pip install pipenv
+
+      - name: Install Dependencies
+        if: steps.setup-python-api.outputs.cache-hit != 'true'
+        run: pipenv install -d
+
+      - name: Execute Lint
+        run: pipenv run lint
+
+  terraform:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -17,6 +44,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       TF_VAR_domain: ${{ secrets.DOMAIN }}
       TF_VAR_dns_records: ${{ secrets.DNS_RECORDS }}
+      TF_VAR_allow_ssh_ip: ${{ secrets.ALLOW_SSH_IP }}
     steps:
       - uses: actions/checkout@v4
 
@@ -51,7 +79,9 @@ jobs:
       - name: Terraform Plan
         if: ${{ github.actor != 'dependabot[bot]' }}
         id: plan
-        run: terraform plan -out workspace.plan
+        run: |
+          mkdir ~/.ssh && touch ~/.ssh/k2ss.pub
+          terraform plan -out workspace.plan
 
       - name: Post Plan
         if: ${{ always() && github.actor != 'dependabot[bot]' && github.ref != 'refs/heads/main' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') }}

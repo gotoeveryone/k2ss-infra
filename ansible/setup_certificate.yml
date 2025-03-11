@@ -1,0 +1,7 @@
+- hosts: web
+  become: yes
+  roles:
+    - nginxinc.nginx
+    - geerlingguy.certbot
+  vars_files:
+    - vars/certbot.yml
