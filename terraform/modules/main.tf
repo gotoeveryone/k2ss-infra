@@ -1,3 +1,9 @@
+module "dns" {
+  domain      = var.domain
+  dns_records = var.dns_records
+  source      = "./dns"
+}
+
 module "identity" {
   app_name                 = var.app_name
   repository               = var.repository

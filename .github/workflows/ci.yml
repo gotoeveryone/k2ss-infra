@@ -15,6 +15,8 @@ jobs:
       pull-requests: write
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TF_VAR_domain: ${{ secrets.DOMAIN }}
+      TF_VAR_dns_records: ${{ secrets.DNS_RECORDS }}
     steps:
       - uses: actions/checkout@v4
 

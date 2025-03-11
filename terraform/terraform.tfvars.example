@@ -1,0 +1,4 @@
+domain      = "hoge.example.com"
+dns_records =  [
+  { type = "A", name = "hoge.example.com", ttl = 300, records = ["0.0.0.0"] }
+]
