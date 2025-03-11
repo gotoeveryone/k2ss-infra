@@ -9,7 +9,3 @@ updates:
     directory: "/terraform"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "pip"
-    directory: "/ansible"
-    schedule:
-      interval: "weekly"
