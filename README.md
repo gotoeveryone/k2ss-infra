@@ -9,25 +9,27 @@
 
 ## Commands
 
-### Init
+### Terraform
+
+#### Init
 
 ```console
 $ terraform init
 ```
 
-### Plan
+#### Plan
 
 ```console
 $ terraform plan
 ```
 
-### Apply
+#### Apply
 
 ```console
 $ terraform apply
 ```
 
-### tfsec
+#### tfsec
 
 ```console
 $ tfsec
