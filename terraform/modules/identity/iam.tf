@@ -34,6 +34,8 @@ resource "aws_iam_role" "ci_role" {
   force_detach_policies = false
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/IAMReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AmazonRoute53ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AWSCertificateManagerReadOnly",
     aws_iam_policy.ci_policy.arn,
   ]
 }
