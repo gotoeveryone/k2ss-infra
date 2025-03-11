@@ -36,6 +36,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Validate
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: terraform validate
 
       - name: Run tfsec with reviewdog output on the PR
@@ -48,11 +49,12 @@ jobs:
           fail_on_error: true
 
       - name: Terraform Plan
+        if: ${{ github.actor != 'dependabot[bot]' }}
         id: plan
         run: terraform plan -out workspace.plan
 
       - name: Post Plan
-        if: ${{ always() && github.ref != 'refs/heads/main' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') }}
+        if: ${{ always() && github.actor != 'dependabot[bot]' && github.ref != 'refs/heads/main' && (steps.plan.outcome == 'success' || steps.plan.outcome == 'failure') }}
         uses: GetTerminus/terraform-pr-commenter@v2
         env:
           EXPAND_SUMMARY_DETAILS: false
