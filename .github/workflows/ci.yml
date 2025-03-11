@@ -62,6 +62,7 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: Terraform Init
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: terraform init
 
       - name: Terraform Validate
