@@ -1,0 +1,9 @@
+group_name: test_user
+user_name: test_user
+user_password: password
+user_home: /home/test_user
+# 以下はユーザ作成時のみ利用
+# sudo コマンドをパスワード無しで実行させるか
+nopass: no
+# サーバに登録するローカルの公開鍵パス
+public_key_path: ~/.ssh/id_rsa.pub

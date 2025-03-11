@@ -1,0 +1,11 @@
+- name: 'Install language-pack'
+  apt:
+    name: language-pack-ja
+- name: 'Get current locale'
+  command: locale
+  check_mode: no
+  changed_when: false
+  register: locale_result
+- name: 'Change locale'
+  command: update-locale LANG=ja_JP.UTF-8
+  when: "'LANG=ja_JP.UTF-8' not in locale_result.stdout"

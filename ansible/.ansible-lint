@@ -1,0 +1,12 @@
+# exclude_paths:
+  # - ./common_script/
+  # - ./ansible/bin/
+  # - ./ansible/module/
+  # - ./ansible/apps/
+parseable: true
+quiet: true
+# skip_list:
+#   - skip_this_tag # skipするタグを指定
+#   - skip_this_id # skipするidを指定
+use_default_rules: true
+verbosity: 1

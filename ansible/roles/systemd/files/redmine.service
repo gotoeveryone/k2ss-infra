@@ -1,0 +1,15 @@
+[Unit]
+Description=Redmine Appliation
+
+[Service]
+#User=redmine
+#Group=redmine
+PIDFile=/opt/redmine/tmp/redmine.pid
+WorkingDirectory=/opt/redmine
+ExecStart=bundle exec unicorn -D -c /opt/redmine/config/unicorn.rb -E production
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

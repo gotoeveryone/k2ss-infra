@@ -1,0 +1,5 @@
+redmine_version: 5.0.12
+redmine_checksum: 57c3995c3724ee3a28631aa969918f75bee2d3681950827f49197f9b0ba8cfaa
+redmine_database_username: '{{ hostvars[inventory_hostname].redmine_database_username }}'
+redmine_database_password: '{{ hostvars[inventory_hostname].redmine_database_password }}'
+redmine_theme_version: master
