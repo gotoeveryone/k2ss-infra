@@ -74,6 +74,22 @@ data "aws_iam_policy_document" "ci_policy" {
     # tfsec:ignore:aws-iam-no-policy-wildcards
     resources = ["*"]
   }
+  // CloudFront
+  statement {
+    effect = "Allow"
+    actions = [
+      "cloudfront:GetCachePolicy",
+      "cloudfront:GetDistribution",
+      "cloudfront:GetOriginRequestPolicy",
+      "cloudfront:ListTagsForResource",
+      "cloudfront:ListCachePolicies",
+      "cloudfront:ListOriginRequestPolicies",
+      "cloudfront:GetCloudFrontOriginAccessIdentity",
+    ]
+    # アクションを限定しているため、リソースについては全許可する
+    # tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_group" "internal_resource_controller" {
