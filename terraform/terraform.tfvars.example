@@ -2,4 +2,7 @@ domain      = "hoge.example.com"
 dns_records =  [
   { type = "A", name = "hoge.example.com", ttl = 300, records = ["0.0.0.0"] }
 ]
+sub_domains = [
+  { name = "hoge", records = ["0.0.0.0"] },
+]
 allow_ssh_ip = "0.0.0.0"
