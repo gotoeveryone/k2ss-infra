@@ -7,7 +7,7 @@ verify_ssl = true
 ansible-lint = "*"
 
 [packages]
-ansible = "~=11.7"
+ansible = "~=11.8"
 
 [requires]
 python_version = "3.11"
