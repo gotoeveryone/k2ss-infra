@@ -8,6 +8,7 @@ ansible-lint = "*"
 
 [packages]
 ansible = "~=12.3"
+ansible-lint = "*"
 
 [requires]
 python_version = "3.12"
