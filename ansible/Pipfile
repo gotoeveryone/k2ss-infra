@@ -10,7 +10,7 @@ ansible-lint = "*"
 ansible = "~=12.3"
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"
 
 [scripts]
 install = "ansible-galaxy install -r requirements.yml"
