@@ -7,7 +7,7 @@ verify_ssl = true
 ansible-lint = "*"
 
 [packages]
-ansible = "~=13.1"
+ansible = "~=13.2"
 ansible-lint = "*"
 
 [requires]
