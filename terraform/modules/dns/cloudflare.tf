@@ -7,11 +7,12 @@ locals {
   dns_records_expanded = flatten([
     for dns_record in var.dns_records : [
       for idx, record in dns_record.records : {
-        key   = "${dns_record.name}_${dns_record.type}_${idx}"
-        name  = dns_record.name
-        type  = dns_record.type
-        ttl   = dns_record.ttl
-        value = record
+        key     = "${dns_record.name}_${dns_record.type}_${idx}"
+        name    = dns_record.name
+        type    = dns_record.type
+        ttl     = dns_record.ttl
+        proxied = dns_record.proxied
+        value   = record
       }
     ]
   ])
@@ -34,9 +35,8 @@ resource "cloudflare_record" "main" {
   priority = each.value.type == "MX" ? tonumber(split(" ", each.value.value)[0]) : null
   content  = each.value.type == "MX" ? split(" ", each.value.value)[1] : each.value.value
 
-  # プロキシ設定（Aレコード以外はDNS Onlyにする）
-  # ワイルドカードレコードはプロキシできない
-  proxied = false
+  # プロキシ設定
+  proxied = each.value.proxied
 }
 
 resource "cloudflare_record" "sub_domains" {
@@ -48,4 +48,28 @@ resource "cloudflare_record" "sub_domains" {
   content = each.value.records[0]
   ttl     = 1    # プロキシ有効時はCloudFlareが自動管理するため1にする
   proxied = true # CloudFlareのプロキシを有効化してHTTPS終端
+}
+
+resource "cloudflare_ruleset" "redirect_www_to_root" {
+  zone_id = data.cloudflare_zone.main.id
+  name    = "default"
+  kind    = "zone"
+  phase   = "http_request_dynamic_redirect"
+
+  rules {
+    description = "redirect-k2ss"
+    expression  = "(http.host eq \"www.${var.domain}\")"
+    action      = "redirect"
+    enabled     = true
+
+    action_parameters {
+      from_value {
+        status_code = 301
+        target_url {
+          expression = "wildcard_replace(http.request.full_uri, \"https://www.*\", \"https://$${1}\")"
+        }
+        preserve_query_string = false
+      }
+    }
+  }
 }
