@@ -1,16 +1,7 @@
-
-module "cdn" {
-  source                 = "./cdn"
-  domain                = var.domain
-  sub_domains = var.sub_domains
-  certificate_arn        = module.dns.cdn_certificate_arn
-}
-
 module "dns" {
   domain      = var.domain
   dns_records = var.dns_records
   sub_domains = var.sub_domains
-  cdn_distibutions = module.cdn.distibutions
   source      = "./dns"
 }
 
@@ -23,7 +14,7 @@ module "identity" {
 
 module "server" {
   region       = var.region
-  app_name       = var.app_name
+  app_name     = var.app_name
   allow_ssh_ip = var.allow_ssh_ip
   source       = "./server"
 }

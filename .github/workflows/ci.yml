@@ -46,6 +46,8 @@ jobs:
       TF_VAR_dns_records: ${{ secrets.DNS_RECORDS }}
       TF_VAR_sub_domains: ${{ secrets.SUB_DOMAINS }}
       TF_VAR_allow_ssh_ip: ${{ secrets.ALLOW_SSH_IP }}
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TF_VAR_cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     steps:
       - uses: actions/checkout@v4
 
