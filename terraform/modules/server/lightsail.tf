@@ -1,5 +1,5 @@
 resource "aws_lightsail_static_ip" "web" {
-  name  = "${var.app_name}_staticip"
+  name = "${var.app_name}_staticip"
 }
 
 resource "aws_lightsail_key_pair" "web" {
@@ -31,10 +31,10 @@ resource "aws_lightsail_instance_public_ports" "web" {
   instance_name = aws_lightsail_instance.web.name
 
   port_info {
-    protocol  = "tcp"
-    from_port = 22
-    to_port   = 22
-    cidrs     = ["${var.allow_ssh_ip}/32"]
+    protocol          = "tcp"
+    from_port         = 22
+    to_port           = 22
+    cidrs             = ["${var.allow_ssh_ip}/32"]
     cidr_list_aliases = ["lightsail-connect"]
   }
 
