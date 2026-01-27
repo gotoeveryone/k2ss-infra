@@ -1,6 +1,6 @@
 domain      = "hoge.example.com"
 dns_records =  [
-  { type = "A", name = "hoge.example.com", ttl = 300, records = ["0.0.0.0"] }
+  { type = "A", name = "hoge.example.com", ttl = 300, proxied = false, records = ["0.0.0.0"] }
 ]
 sub_domains = [
   { name = "hoge", records = ["0.0.0.0"] },
