@@ -45,7 +45,7 @@ jobs:
         run: terraform validate
 
       - name: Run tfsec with reviewdog output on the PR
-        uses: reviewdog/action-tfsec@master
+        uses: reviewdog/action-tfsec@v1
         with:
           tfsec_version: v1.28.1
           working_directory: terraform
