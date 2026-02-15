@@ -1,8 +1,0 @@
-- name: Install jq
-  apt:
-    name: jq
-    state: latest
-- name: Install yq
-  apt:
-    name: yq
-    state: latest
