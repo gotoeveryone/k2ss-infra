@@ -28,16 +28,29 @@ data "aws_iam_policy_document" "github_actions_policy" {
 }
 
 resource "aws_iam_role" "ci_role" {
-  name                  = "${var.app_name}-ci-role"
-  assume_role_policy    = data.aws_iam_policy_document.github_actions_policy.json
-  description           = "for GitHub Actions OIDC"
-  force_detach_policies = false
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/IAMReadOnlyAccess",
-    "arn:aws:iam::aws:policy/AmazonRoute53ReadOnlyAccess",
-    "arn:aws:iam::aws:policy/AWSCertificateManagerReadOnly",
-    aws_iam_policy.ci_policy.arn,
-  ]
+  name               = "${var.app_name}-ci-role"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_policy.json
+  description        = "for GitHub Actions OIDC"
+}
+
+resource "aws_iam_role_policy_attachment" "ci_iam_read_only" {
+  role       = aws_iam_role.ci_role.name
+  policy_arn = "arn:aws:iam::aws:policy/IAMReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "ci_route53_read_only" {
+  role       = aws_iam_role.ci_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53ReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "ci_acm_read_only" {
+  role       = aws_iam_role.ci_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSCertificateManagerReadOnly"
+}
+
+resource "aws_iam_role_policy_attachment" "ci_policy" {
+  role       = aws_iam_role.ci_role.name
+  policy_arn = aws_iam_policy.ci_policy.arn
 }
 
 resource "aws_iam_policy" "ci_policy" {
@@ -60,19 +73,6 @@ data "aws_iam_policy_document" "ci_policy" {
       "arn:aws:s3:::${var.internal_resource_bucket}",
       "arn:aws:s3:::${var.internal_resource_bucket}/*",
     ]
-  }
-  // Lightsail
-  statement {
-    effect = "Allow"
-    actions = [
-      "lightsail:GetInstance",
-      "lightsail:GetInstancePortStates",
-      "lightsail:GetKeyPair",
-      "lightsail:GetStaticIp",
-    ]
-    # アクションを限定しているため、リソースについては全許可する
-    # tfsec:ignore:aws-iam-no-policy-wildcards
-    resources = ["*"]
   }
   // CloudFront
   statement {

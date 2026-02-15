@@ -1,9 +1,0 @@
-[web]
-0.0.0.0
-
-[web:vars]
-server_name=hoge.example.com
-certbot_admin_email=hoge@example.com
-redmine_server_name=redmine.example.com
-redmine_database_username=admin
-redmine_database_password=admin

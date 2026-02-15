@@ -12,13 +12,6 @@ module "identity" {
   source                   = "./identity"
 }
 
-module "server" {
-  region       = var.region
-  app_name     = var.app_name
-  allow_ssh_ip = var.allow_ssh_ip
-  source       = "./server"
-}
-
 module "storage" {
   app_name = var.app_name
   source   = "./storage"

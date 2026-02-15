@@ -4,33 +4,6 @@ on:
   pull_request:
 
 jobs:
-  ansible:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ansible
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        id: setup-python
-        with:
-          python-version: "3.12"
-          cache: pipenv
-          cache-dependency-path: |
-            ansible/Pipfile.lock
-
-      - name: Setup Pipenv
-        run: pip install pipenv
-
-      - name: Install Dependencies
-        if: steps.setup-python-api.outputs.cache-hit != 'true'
-        run: pipenv install -d
-
-      - name: Execute Lint
-        run: pipenv run lint
-
   terraform:
     runs-on: ubuntu-latest
     defaults:
@@ -45,7 +18,6 @@ jobs:
       TF_VAR_domain: ${{ secrets.DOMAIN }}
       TF_VAR_dns_records: ${{ secrets.DNS_RECORDS }}
       TF_VAR_sub_domains: ${{ secrets.SUB_DOMAINS }}
-      TF_VAR_allow_ssh_ip: ${{ secrets.ALLOW_SSH_IP }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     steps:
@@ -73,7 +45,7 @@ jobs:
         run: terraform validate
 
       - name: Run tfsec with reviewdog output on the PR
-        uses: reviewdog/action-tfsec@master
+        uses: reviewdog/action-tfsec@v1
         with:
           tfsec_version: v1.28.1
           working_directory: terraform
@@ -85,7 +57,6 @@ jobs:
         if: ${{ github.actor != 'dependabot[bot]' }}
         id: plan
         run: |
-          mkdir ~/.ssh && touch ~/.ssh/k2ss.pub
           terraform plan -out workspace.plan
 
       - name: Post Plan

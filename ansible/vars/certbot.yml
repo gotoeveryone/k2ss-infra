@@ -1,7 +1,0 @@
-certbot_auto_renew_user: root
-certbot_auto_renew_options: "--quiet --no-self-upgrade --pre-hook 'systemctl stop nginx' --post-hook 'systemctl start nginx'"
-certbot_create_if_missing: true
-certbot_admin_email: '{{ hostvars[inventory_hostname].certbot_admin_email }}'
-certbot_certs:
-  - domains:
-    - '{{ redmine_server_name }}'

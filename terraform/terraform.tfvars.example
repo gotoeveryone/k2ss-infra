@@ -5,6 +5,5 @@ dns_records =  [
 sub_domains = [
   { name = "hoge", records = ["0.0.0.0"] },
 ]
-allow_ssh_ip = "0.0.0.0"
 cloudflare_api_token = "xxxx"
 cloudflare_zone_id   = "xxxx"
